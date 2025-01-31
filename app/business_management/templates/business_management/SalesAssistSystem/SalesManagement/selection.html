@@ -1,0 +1,38 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>売上管理メニュー</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex items-center justify-center h-screen">
+        <div class="bg-white border border-black p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h1 class="text-2xl font-mono text-center mb-6">売上管理</h1>
+
+            <ul class="text-center space-y-4">
+                <li>
+                    <a href="{% url 'annual-order-summary' %}" class="block border border-black text-gray-800 py-3 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300 text-lg">
+                        年次受注集計
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'product-wise-order-summary' %}" class="block border border-black text-gray-800 py-3 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300 text-lg">
+                        商品別受注集計
+                    </a>
+                </li>
+            </ul>
+
+            <div class="text-center mt-6">
+                <a href="{% url 'home' %}" class="border border-black text-gray-800 py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    戻る
+                </a>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>

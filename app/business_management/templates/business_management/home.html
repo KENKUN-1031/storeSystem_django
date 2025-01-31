@@ -1,0 +1,47 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex items-center justify-center min-h-screen">
+    <!-- {% include 'header.html' %} -->
+
+    <div class="w-full max-w-md p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">HOME</h1>
+
+        {% if request.session.department_name == 'Sales' %}
+            <ul class="text-center space-y-4">
+                <li><a href="{% url 'customer-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">得意先管理</a></li>
+                <li><a href="{% url 'order-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">受注管理</a></li>
+                <li><a href="{% url 'sales-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">売上管理</a></li>
+                <li><a href="{% url 'product-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">製品情報閲覧</a></li>
+            </ul>
+
+        {% elif request.session.department_name == 'Human Resources' %}
+            <ul class="text-center space-y-4">
+                <li><a href="{% url 'employee-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">従業員管理</a></li>
+                <li><a href="{% url 'department-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">部署管理</a></li>
+            </ul>
+
+        {% elif request.session.department_name == 'Production Management' %}
+            <ul class="text-center space-y-4">
+                <li><a href="{% url 'production-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">生産管理</a></li>
+                <li><a href="{% url 'stock-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">在庫情報</a></li>
+                <li><a href="{% url 'shipment-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">入荷情報</a></li>
+            </ul>
+
+        {% elif request.session.department_name == 'Product Management' %}
+            <ul class="text-center space-y-4">
+                <li><a href="{% url 'product-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">製品管理</a></li>
+                <li><a href="{% url 'stock-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">在庫管理</a></li>
+                <li><a href="{% url 'shipment-management' %}" class="block bg-gray-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 font-mono">出荷管理</a></li>
+            </ul>
+        {% endif %}
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>

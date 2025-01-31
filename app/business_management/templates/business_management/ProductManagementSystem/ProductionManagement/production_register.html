@@ -1,0 +1,48 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>Product Register</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex flex-col items-center min-h-screen">
+
+    <main class="w-full max-w-md p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">生産登録</h1>
+
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <div class="space-y-4">
+                {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block font-mono">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button class="mt-6 border border-black text-gray-800 font-mono py-2 px-6 w-full rounded-md shadow-sm hover:bg-gray-200 transition duration-300" type="submit">
+                登録
+            </button>
+
+            <a href="{% url 'production-manage' %}" class="block text-center mt-4 border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                戻る
+            </a>
+        </form>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

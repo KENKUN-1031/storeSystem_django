@@ -1,0 +1,101 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex flex-col items-center min-h-screen">
+
+    <main class="w-full max-w-4xl p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">得意先一覧</h1>
+
+        <form method="GET" action="" class="flex flex-wrap justify-center gap-4 border border-black p-4 rounded-lg">
+            {% csrf_token %}
+            <div>
+                <label for="query" class="block font-mono">検索</label>
+                {{ search_form.query }}
+            </div>
+            <div>
+                <button type="submit" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    検索
+                </button>
+            </div>
+            <div>
+                <a href="{% url 'customer-manage' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    クリア
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'customer-register' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    + 新規得意先登録
+                </a>
+            </div>
+        </form>
+
+        {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+                <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="overflow-x-auto mt-6">
+            {% if customers %}
+                <table class="w-full border border-black">
+                    <thead class="bg-gray-700 text-white font-mono">
+                        <tr>
+                            <th class="px-6 py-3 border border-black">得意先ID</th>
+                            <th class="px-6 py-3 border border-black">得意先名</th>
+                            <th class="px-6 py-3 border border-black">電話番号</th>
+                            <th class="px-6 py-3 border border-black">郵便番号</th>
+                            <th class="px-6 py-3 border border-black">住所</th>
+                            <th class="px-6 py-3 border border-black">メールアドレス</th>
+                            <th class="px-6 py-3 border border-black"></th>
+                            <th class="px-6 py-3 border border-black"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-gray-100">
+                        {% for customer in customers %}
+                            <tr class="hover:bg-gray-400 hover:text-white transition duration-300">
+                                <td class="px-6 py-4 border border-black text-center">{{ customer.id }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ customer.name }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ customer.contact_number }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ customer.postal_code }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ customer.address }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ customer.email }}</td>
+                                <td class="px-6 py-4 border border-black text-center">
+                                    <form method="POST" action="{% url 'customer-edit' customer.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-orange-600">編集</button>
+                                    </form>
+                                </td>
+                                <td class="px-6 py-4 border border-black text-center">
+                                    <form method="POST" action="{% url 'customer-delete' customer.id %}" onsubmit="return confirm('本当にこの得意先を削除しますか？');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-600">削除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center mt-4 text-lg font-mono">No Data</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'customer-management' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

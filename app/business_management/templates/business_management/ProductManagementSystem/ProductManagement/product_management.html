@@ -1,0 +1,105 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex flex-col items-center min-h-screen">
+
+    <main class="w-full max-w-4xl p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">製品一覧</h1>
+
+        <form method="GET" action="" class="flex flex-wrap justify-center gap-4 border border-black p-4 rounded-lg">
+            {% csrf_token %}
+            <div>
+                <label for="search_type" class="block font-mono">検索タイプ</label>
+                {{ search_form.search_type }}
+            </div>
+            <div>
+                <label for="query" class="block font-mono">キーワード</label>
+                {{ search_form.query }}
+            </div>
+            <div>
+                <button type="submit" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    検索
+                </button>
+            </div>
+            <div>
+                <a href="{% url 'product-manage' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    クリア
+                </a>
+            </div>
+            {% if request.session.department_name == 'Product Management' %}
+                <div>
+                    <a href="{% url 'product-register' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                        + 新規製品登録
+                    </a>
+                </div>
+            {% endif %}
+        </form>
+
+        {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+                <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="overflow-x-auto mt-6">
+            {% if products %}
+                <table class="w-full border border-black">
+                    <thead class="bg-gray-700 text-white font-mono">
+                        <tr>
+                            <th class="px-6 py-3 border border-black">製品ID</th>
+                            <th class="px-6 py-3 border border-black">製品名</th>
+                            <th class="px-6 py-3 border border-black">製品単価</th>
+                            {% if request.session.department_name == 'Product Management' %}
+                                <th class="px-6 py-3 border border-black"></th>
+                                <th class="px-6 py-3 border border-black"></th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-gray-100">
+                        {% for product in products %}
+                            <tr class="hover:bg-gray-400 hover:text-white transition duration-300">
+                                <td class="px-6 py-4 border border-black text-center">{{ product.id }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ product.name }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ product.price | default:'None' }}</td>
+                                {% if request.session.department_name == 'Product Management' %}
+                                    <td class="px-6 py-4 border border-black text-center">
+                                        <form method="POST" action="{% url 'product-edit' product.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="text-orange-600">編集</button>
+                                        </form>
+                                    </td>
+                                    <td class="px-6 py-4 border border-black text-center">
+                                        <form method="POST" action="{% url 'product-delete' product.id %}" onsubmit="return confirm('本当にこの製品を削除しますか？');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="text-red-600">削除</button>
+                                        </form>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center mt-4 text-lg font-mono">No Data</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'product-management' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </main>
+        {% include 'footer.html' %}
+</body>
+</html>

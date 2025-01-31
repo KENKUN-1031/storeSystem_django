@@ -1,0 +1,119 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Management</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex flex-col items-center min-h-screen">
+
+    <main class="w-full max-w-4xl p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">生産一覧</h1>
+
+        <div class="w-full p-4 border border-black rounded-lg flex flex-wrap justify-center gap-4">
+            <form method="GET" action="" class="flex flex-wrap gap-4 justify-center">
+                {% csrf_token %}
+                <div>
+                    {{ search_form.query }}
+                </div>
+                <div>
+                    <button type="submit" class="border border-black text-white font-mono py-2 px-6 rounded-md shadow-lg hover:bg-gray-200 transition duration-300">
+                        検索
+                    </button>
+                </div>
+                <div>
+                    <a href="{% url 'production-manage' %}" class="border border-black text-gray font-mono py-2 px-6 rounded-md shadow-lg hover:bg-gray-200 transition duration-300">
+                        クリア
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'production-register' %}" class="border border-black text-gray font-mono py-2 px-6 rounded-md shadow-lg hover:bg-gray-200 transition duration-300">
+                        + 新規生産登録
+                    </a>
+                </div>
+            </form>
+
+            <div>
+                {% if completed %}
+                    <a href="{% url 'production-manage' %}" class="bg-gray-500 text-gray font-mono py-2 px-6 rounded-md shadow-lg hover:bg-gray-600 transition duration-300">
+                        全て表示
+                    </a>
+                {% else %}
+                    <a href="?completed=1" class="text-gray border border-black font-mono py-2 px-6 rounded-md shadow-lg hover:bg-gray-200 transition duration-300">
+                        生産完了のみ表示
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+                <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="overflow-x-auto mt-6">
+            {% if productions %}
+                <table class="w-full border border-black">
+                    <thead class="bg-gray-700 text-white font-mono">
+                        <tr>
+                            <th class="px-6 py-3 border border-black">製造ID</th>
+                            <th class="px-6 py-3 border border-black">受注ID</th>
+                            <th class="px-6 py-3 border border-black">製品名</th>
+                            <th class="px-6 py-3 border border-black">受注日</th>
+                            <th class="px-6 py-3 border border-black">製造ロット数</th>
+                            <th class="px-6 py-3 border border-black">製造期日</th>
+                            <th class="px-6 py-3 border border-black">完了予定日</th>
+                            <th class="px-6 py-3 border border-black">完了日</th>
+                            <th class="px-6 py-3 border border-black"></th>
+                            <th class="px-6 py-3 border border-black"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-gray-100">
+                        {% for production in productions %}
+                            <tr class="hover:bg-gray-400 hover:text-white transition duration-300">
+                                <td class="px-6 py-4 border border-black text-center">{{ production.id }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.order.id }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.order.item.name }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.order.order_date }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.lot_quantity | default:'0' }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.due_date }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.estimated_completion_date }}</td>
+                                <td class="px-6 py-4 border border-black text-center">{{ production.completion_date }}</td>
+                                <td class="px-6 py-4 border border-black text-center">
+                                    <form method="POST" action="{% url 'production-edit' production.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-orange-600 font-mono hover:underline">編集</button>
+                                    </form>
+                                </td>
+                                <td class="px-6 py-4 border border-black text-center">
+                                    <form method="POST" action="{% url 'production-delete' production.id %}" onsubmit="return confirm('本当にこの製品を削除しますか？');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-600 font-mono hover:underline">削除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center mt-4 text-lg font-mono">No Data</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'production-management' %}" class="bg-gray-600 text-white font-mono py-2 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html>

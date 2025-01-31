@@ -1,0 +1,46 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Register</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex flex-col items-center min-h-screen">
+
+    <main class="w-full max-w-md p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">得意先登録</h1>
+
+        {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+                <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {{ form.as_p }}
+            </div>
+
+            <div class="flex justify-between mt-6">
+                <button type="submit" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300 w-full">
+                    登録
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'customer-manage' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

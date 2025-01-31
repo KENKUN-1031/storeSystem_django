@@ -1,0 +1,31 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management Selection</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex flex-col items-center min-h-screen">
+
+    <main class="w-full max-w-md p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">受注管理</h1>
+
+        <ul class="text-center space-y-3">
+            <li>
+                <a href="{% url 'order-manage' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300 block w-full text-center">
+                    受注管理
+                </a>
+            </li>
+        </ul>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'home' %}" class="border border-black text-gray-800 font-mono py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex items-center justify-center min-h-screen">
+    <main class="w-full max-w-2xl p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">部署一覧</h1>
+
+        <div class="mb-6 text-center">
+            <a href="{% url 'department-register' %}" class="inline-block border border-black text-gray font-mono py-3 px-6 rounded-md shadow-lg hover:bg-gray-200 transition duration-300">
+                + 新規部署登録
+            </a>
+        </div>
+
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="overflow-x-auto sm:rounded-lg">
+            {% if departments %}
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 sm:rounded-lg">
+                <thead class="bg-gray-700 text-white font-mono">
+                    <tr>
+                        <th class="px-6 py-3 border border-black">部署ID</th>
+                        <th class="px-6 py-3 border border-black">部署名</th>
+                        <th class="px-6 py-3 border border-black"></th>
+                        <th class="px-6 py-3 border border-black"></th>
+                    </tr>
+                </thead>
+                <tbody class="bg-gray-100">
+                    {% for department in departments %}
+                    <tr class="hover:bg-gray-400 hover:text-white transition duration-300">
+                        <td class="px-6 py-4 border border-black text-center">{{ department.id }}</td>
+                        <td class="px-6 py-4 border border-black text-center">{{ department.name }}</td>
+                        <td class="px-6 py-4 border border-black text-center">
+                            <form method="POST" action="{% url 'department-edit' department.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-blue-600 font-mono hover:underline">編集</button>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4 border border-black text-center">
+                            <form method="POST" action="{% url 'department-delete' department.id %}" onsubmit="return confirm('本当にこの部署を削除しますか？')">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 font-mono hover:underline">削除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p class="text-center mt-4 text-lg font-mono">No Data</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'department-management' %}"
+               class="inline-block bg-gray-600 text-white font-mono py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html>

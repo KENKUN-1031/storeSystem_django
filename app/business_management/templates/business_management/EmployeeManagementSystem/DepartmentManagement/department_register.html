@@ -1,0 +1,52 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>Department Register</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% tailwind_css %}
+  </head>
+  <body class="bg-white flex items-center justify-center min-h-screen">
+    <main class="w-full max-w-md p-8 border border-black rounded-lg shadow-lg bg-white">
+      <h1 class="text-3xl text-center font-mono mb-6">部署登録</h1>
+
+      {% if messages %}
+        <div class="mb-4">
+          {% for message in messages %}
+            <p class="text-center font-mono {% if 'error' in message.tags %}text-red-600{% elif 'success' in message.tags %}text-green-600{% endif %}">
+              {{ message }}
+            </p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="space-y-4">
+          {% for field in form %}
+            <div>
+              <label class="block font-mono" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+            </div>
+          {% endfor %}
+        </div>
+
+        <button
+          class="mt-6 text-gray font-mono p-2 w-full rounded-md border border-black hover:bg-gray-200 transition duration-300"
+          type="submit"
+        >
+          登録
+        </button>
+
+        <a href="{% url 'department-manage' %}"
+           class="block text-center mt-4 bg-gray-600 text-white font-mono py-2 px-4 rounded-md shadow-lg hover:bg-gray-700 transition duration-300">
+          戻る
+        </a>
+      </form>
+    </main>
+
+    {% include 'footer.html' %}
+  </body>
+</html>

@@ -1,0 +1,32 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management Selection</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex items-center justify-center min-h-screen">
+    <main class="w-full max-w-md p-8 border border-black rounded-lg shadow-lg bg-white">
+        <h1 class="text-3xl text-center font-mono mb-6">従業員管理</h1>
+
+        <ul class="text-center space-y-4">
+            <li>
+                <a href="{% url 'employee-manage' %}"
+                   class="block bg-gray-600 text-white font-mono py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300">
+                   従業員管理
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'home' %}"
+                   class="block bg-gray-600 text-white font-mono py-3 px-6 rounded-md shadow-lg hover:bg-gray-700 transition duration-300">
+                   戻る
+                </a>
+            </li>
+        </ul>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html>

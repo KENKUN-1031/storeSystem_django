@@ -1,0 +1,78 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年次受注集計</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-mono text-center mb-6">年次受注集計</h1>
+
+        <div class="w-full max-w-2xl mx-auto p-6 border border-black rounded-lg shadow-lg bg-white">
+            <form method="POST" action="" class="flex flex-col md:flex-row justify-center items-center space-y-3 md:space-y-0 md:space-x-3">
+                {% csrf_token %}
+                <div class="w-full">
+                    {{ form.query }}
+                </div>
+
+                <button type="submit" class="border border-black text-gray-800 py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    検索
+                </button>
+
+                <a href="{% url 'annual-order-summary' %}" class="border border-black text-gray-800 py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                    クリア
+                </a>
+            </form>
+        </div>
+
+        <div class="mx-auto mt-6">
+            {% if orders_by_year %}
+                {% for year, year_data in orders_by_year.items %}
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 bg-gray-200 p-3 rounded-md">
+                        年: {{ year }} - 総受注数: {{ year_data.total_quantity_per_year }} - 総受注金額: ¥{{ year_data.total_price_per_year }}
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-black rounded-lg">
+                            <thead class="bg-gray-700 text-white">
+                                <tr>
+                                    <th class="px-6 py-3 border">得意先ID</th>
+                                    <th class="px-6 py-3 border">年</th>
+                                    <th class="px-6 py-3 border">月</th>
+                                    <th class="px-6 py-3 border">受注数</th>
+                                    <th class="px-6 py-3 border">受注金額</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-gray-100">
+                                {% for order in year_data.orders %}
+                                    <tr class="hover:bg-gray-200">
+                                        <td class="px-6 py-4 border">{{ order.customer_id }}</td>
+                                        <td class="px-6 py-4 border">{{ order.order_year }}</td>
+                                        <td class="px-6 py-4 border">{{ order.order_month }}</td>
+                                        <td class="px-6 py-4 border">{{ order.total_quantity }}</td>
+                                        <td class="px-6 py-4 border">¥{{ order.total_price }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center mt-4 text-gray-800 font-mono">データがありません</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'sales-management' %}" class="border border-black text-gray-800 py-2 px-6 rounded-md shadow-sm hover:bg-gray-200 transition duration-300">
+                戻る
+            </a>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>
