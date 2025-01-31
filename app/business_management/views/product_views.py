@@ -13,29 +13,29 @@ def product_management(request):
 
 class ProductListView(ListView):
     model = Items
-    template_name = 'business_management/ProductManagementSystem/ProductManagement/product_management.html'
+    template_name = 'business_management/ProductManagementSystem/ProductManagement/productManagement.html'
     context_object_name = 'products'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = ProductSearchForm()
         return context
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         search_type = self.request.GET.get('search_type', '')
         query = self.request.GET.get('query', '')
-        
+
         if search_type == 'id' and query:
             # queryset = queryset.filter(id=query)
             queryset = queryset.filter(id__icontains=query)
         elif search_type == 'name' and query:
             queryset = queryset.filter(name__icontains=query)
-        
+
         return queryset
 
 
-def product_register(request):  
+def product_register(request):
     params = {
         'form': ProductRegisterForm()
     }
@@ -53,7 +53,7 @@ def product_register(request):
             except IntegrityError:
                 messages.error(request, '製品IDが既に登録されています。')
                 return redirect('/product-management/register')
-    return render(request, 'business_management/ProductManagementSystem/ProductManagement/product_register.html', params)
+    return render(request, 'business_management/ProductManagementSystem/ProductManagement/productRegister.html', params)
 
 
 def product_edit(request, product_id):
@@ -68,7 +68,7 @@ def product_edit(request, product_id):
             form.save()
             messages.success(request, f'製品ID:「{product.id}」、製品名:「{product.name}」、価格:「{product.price}」を更新しました。')
             return redirect('product-manage')
-    return render(request, 'business_management/ProductManagementSystem/ProductManagement/product_edit.html', params)
+    return render(request, 'business_management/ProductManagementSystem/ProductManagement/productEdit.html', params)
 
 
 def product_delete(request, product_id):

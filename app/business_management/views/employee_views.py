@@ -12,29 +12,29 @@ def employee_management(request):
 
 class EmployeeListView(ListView):
     model = Employee
-    template_name = 'business_management/EmployeeManagementSystem/EmployeeManagement/employee_management.html'
+    template_name = 'business_management/EmployeeManagementSystem/EmployeeManagement/employeeManagement.html'
     context_object_name = 'employees'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = EmployeeSearchForm()
         return context
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         search_type = self.request.GET.get('search_type', '')
         query = self.request.GET.get('query', '')
-        
+
         if search_type == 'id' and query:
             # queryset = queryset.filter(id=query)
             queryset = queryset.filter(id__icontains=query)
         elif search_type == 'name' and query:
             queryset = queryset.filter(name__icontains=query)
-        
+
         return queryset
 
 
-def employee_register(request):    
+def employee_register(request):
     params = {
         'form': EmployeeRegisterForm()
     }
@@ -55,7 +55,7 @@ def employee_register(request):
             except IntegrityError:
                 messages.error(request, '従業員IDまたはメールアドレスが既に登録されています。')
                 return redirect('/employee-management/register')
-    return render(request, 'business_management/EmployeeManagementSystem/EmployeeManagement/employee_register.html', params)
+    return render(request, 'business_management/EmployeeManagementSystem/EmployeeManagement/employeeRegister.html', params)
 
 
 def employee_edit(request, employee_id):
@@ -70,7 +70,7 @@ def employee_edit(request, employee_id):
             form.save()
             messages.success(request, f'従業員ID:「{employee.id}」、従業員名:「{employee.name}」を更新しました。')
             return redirect('employee-manage')
-    return render(request, 'business_management/EmployeeManagementSystem/EmployeeManagement/employee_edit.html', params)
+    return render(request, 'business_management/EmployeeManagementSystem/EmployeeManagement/employeeEdit.html', params)
 
 
 def employee_delete(request, employee_id):

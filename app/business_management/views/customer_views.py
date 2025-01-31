@@ -11,30 +11,30 @@ def customer_management(request):
 
 class CustomerListView(ListView):
     model = Customer
-    template_name = 'business_management/SalesAssistSystem/CustomerManagement/customer_management.html'
+    template_name = 'business_management/SalesAssistSystem/CustomerManagement/customerManagement.html'
     context_object_name = 'customers'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = CustomerSearchForm()
         return context
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         # search_type = self.request.GET.get('search_type', '')
         query = self.request.GET.get('query', '')
-        
+
         if query:
             queryset = queryset.filter(id=query)
         # if search_type == 'id' and query:
         #     queryset = queryset.filter(id=query)
         # elif search_type == 'name' and query:
             # queryset = queryset.filter(name__icontains=query)
-        
+
         return queryset
 
 
-def customer_register(request):    
+def customer_register(request):
     params = {
         'form': CustomerRegisterForm()
     }
@@ -49,7 +49,7 @@ def customer_register(request):
             except IntegrityError:
                 messages.error(request, '得意先IDまたはメールアドレスが既に登録されています。')
                 return redirect('/customer-management/register')
-    return render(request, 'business_management/SalesAssistSystem/CustomerManagement/customer_register.html', params)
+    return render(request, 'business_management/SalesAssistSystem/CustomerManagement/customerRegister.html', params)
 
 
 def customer_edit(request, customer_id):
@@ -64,7 +64,7 @@ def customer_edit(request, customer_id):
             form.save()
             messages.success(request, f'得意先ID:「{customer.id}」、得意先名:「{customer.name}」を更新しました。')
             return redirect('customer-manage')
-    return render(request, 'business_management/SalesAssistSystem/CustomerManagement/customer_edit.html', params)
+    return render(request, 'business_management/SalesAssistSystem/CustomerManagement/customerEdit.html', params)
 
 
 def customer_delete(request, customer_id):

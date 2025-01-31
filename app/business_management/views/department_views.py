@@ -11,7 +11,7 @@ def department_management(request):
 
 class DepartmentListView(ListView):
     model = Department
-    template_name =  'business_management/EmployeeManagementSystem/DepartmentManagement/department_management.html'
+    template_name =  'business_management/EmployeeManagementSystem/DepartmentManagement/departmentManagement.html'
     context_object_name = 'departments'
 
 
@@ -27,7 +27,7 @@ def department_register(request):
             return redirect('department-manage')
     else:
         form = DepartmentRegisterForm()
-    return render(request, 'business_management/EmployeeManagementSystem/DepartmentManagement/department_register.html', {'form': form})
+    return render(request, 'business_management/EmployeeManagementSystem/DepartmentManagement/departmentRegister.html', {'form': form})
 
 
 def department_edit(request, department_id):
@@ -42,7 +42,7 @@ def department_edit(request, department_id):
             form.save()
             messages.success(request, f'部署ID:「{department.id}」、部署名:「{department.name}」を更新しました。')
             return redirect('department-manage')
-    return render(request, 'business_management/EmployeeManagementSystem/DepartmentManagement/department_edit.html', params)
+    return render(request, 'business_management/EmployeeManagementSystem/DepartmentManagement/departmentEdit.html', params)
 
 
 def department_delete(request, department_id):

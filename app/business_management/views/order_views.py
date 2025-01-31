@@ -10,19 +10,19 @@ def order_management(request):
 
 class OrderListView(ListView):
     model = Order
-    template_name = 'business_management/SalesAssistSystem/OrderManagement/order_management.html'
+    template_name = 'business_management/SalesAssistSystem/OrderManagement/orderManagement.html'
     context_object_name = 'orders'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = OrderSearchForm()
         return context
-    
+
     def get_queryset(self):
         queryset = super().get_queryset().order_by('id')
         query = self.request.GET.get('query', '')
         search_type = self.request.GET.get('search_type', '')
-        
+
         if search_type == 'id' and query:
             if not query.isdigit():
                 messages.error(self.request, '受注IDは整数で入力してください。')
@@ -30,11 +30,11 @@ class OrderListView(ListView):
             queryset = queryset.filter(id=query).order_by('id')
         elif search_type == 'customer_name' and query:
             queryset = queryset.filter(customer__name__icontains=query).order_by('id')
-        
+
         return queryset
 
 
-def order_register(request):    
+def order_register(request):
     params = {
         'form': OrderRegisterForm()
     }
@@ -48,7 +48,7 @@ def order_register(request):
         else:
             messages.error(request, '受注IDまたは得意先名が既に登録されています。')
             return redirect('/order-management/register')
-    return render(request, 'business_management/SalesAssistSystem/OrderManagement/order_register.html', params)
+    return render(request, 'business_management/SalesAssistSystem/OrderManagement/orderRegister.html', params)
 
 
 def order_edit(request, order_id):
@@ -63,7 +63,7 @@ def order_edit(request, order_id):
             form.save()
             messages.success(request, f'受注ID:「{order.id}」、得意先名:「{order.customer.name}」を更新しました。')
             return redirect('order-manage')
-    return render(request, 'business_management/SalesAssistSystem/OrderManagement/order_edit.html', params)
+    return render(request, 'business_management/SalesAssistSystem/OrderManagement/orderEdit.html', params)
 
 
 def order_delete(request, order_id):

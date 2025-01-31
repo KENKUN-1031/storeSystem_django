@@ -12,7 +12,7 @@ def production_management(request):
 
 class ProductionListView(ListView):
     model = Production
-    template_name = 'business_management/ProductManagementSystem/ProductionManagement/production_management.html'
+    template_name = 'business_management/ProductManagementSystem/ProductionManagement/productionManagement.html'
     context_object_name = 'productions'
 
     def get_context_data(self, **kwargs):
@@ -20,7 +20,7 @@ class ProductionListView(ListView):
         context['search_form'] = ProductionSearchForm()
         context['completed'] = self.request.GET.get('completed', '')
         return context
-    
+
     def get_queryset(self):
         queryset = super().get_queryset().order_by('id')
 
@@ -43,7 +43,7 @@ class ProductionListView(ListView):
             queryset = queryset.filter(completion_date__isnull=False)
 
         return queryset
-    
+
 def production_register(request):
     params = {
         'form': ProductionRegisterForm()
@@ -56,14 +56,14 @@ def production_register(request):
 
                 if not form.cleaned_data['completion_date']:
                     production.completion_date = None
-                
+
                 production.save()
                 messages.success(request, f'製造ID:「{production.id}」を登録しました。')
             except IntegrityError:
                 messages.error(request, 'その受注IDに対する製造は既に登録されています。')
             return redirect('production-register')
-    return render(request, 'business_management/ProductManagementSystem/ProductionManagement/production_register.html', params)
-    
+    return render(request, 'business_management/ProductManagementSystem/ProductionManagement/productionRegister.html', params)
+
 def production_edit(request, production_id):
     production = get_object_or_404(Production, id=production_id)
     params = {
@@ -76,8 +76,8 @@ def production_edit(request, production_id):
             form.save()
             messages.success(request, f'製造ID:「{production.id}」を更新しました。')
             return redirect('production-manage')
-    return render(request, 'business_management/ProductManagementSystem/ProductionManagement/production_edit.html', params)
-    
+    return render(request, 'business_management/ProductManagementSystem/ProductionManagement/productionEdit.html', params)
+
 def production_delete(request, production_id):
     if request.method == 'POST':
         production = get_object_or_404(Production, id=production_id)

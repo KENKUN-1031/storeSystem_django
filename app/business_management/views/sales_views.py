@@ -24,7 +24,7 @@ def annual_order_summary(request):
             )
             .order_by('customer_id', 'order_year', 'order_month')
         )
-        
+
 
         orders_by_year = {}
         for order in orders:
@@ -42,7 +42,7 @@ def annual_order_summary(request):
     else:
         orders_by_year = None
 
-    return render(request, 'business_management/SalesAssistSystem/SalesManagement/annual_order_summary.html', {
+    return render(request, 'business_management/SalesAssistSystem/SalesManagement/annualOrderSummary.html', {
         'orders_by_year': orders_by_year,
         'form': form,
     })
@@ -76,7 +76,7 @@ def product_wise_order_summary(request):
     else:
         products_by_year = None
 
-    return render(request, 'business_management/SalesAssistSystem/SalesManagement/product_wise_order_summary.html', {
+    return render(request, 'business_management/SalesAssistSystem/SalesManagement/productWiseOrderSummary.html', {
         'products_by_year': products_by_year,
         'form': form,
     })
